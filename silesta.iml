@@ -7,6 +7,20 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="JUnit5">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/plugins/junit/lib/junit-jupiter-api-5.0.0-M3.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/plugins/junit/lib/opentest4j-1.0.0-M1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="marytts-client-5.2-jar-with-dependencies" level="project" />
+    <orderEntry type="library" name="marytts-lang-en-5.2" level="project" />
+    <orderEntry type="library" name="marytts-lang-ru-5.2" level="project" />
+    <orderEntry type="library" name="marytts-runtime-5.2-jar-with-dependencies" level="project" />
+    <orderEntry type="library" name="voice-cmu-slt-hsmm-5.2" level="project" />
   </component>
 </module>
-
