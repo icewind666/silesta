@@ -22,5 +22,8 @@
     <orderEntry type="library" name="marytts-lang-ru-5.2" level="project" />
     <orderEntry type="library" name="marytts-runtime-5.2-jar-with-dependencies" level="project" />
     <orderEntry type="library" name="voice-cmu-slt-hsmm-5.2" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="neuroph-core-2.94" level="project" />
+    <orderEntry type="library" name="neuroph-contrib-2.94" level="project" />
   </component>
 </module>

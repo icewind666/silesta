@@ -885,3 +885,15 @@
 2017-04-16 00:36:19,806 [Thread-2] INFO  marytts.HTSEngine Module shut down.
 2017-04-16 00:36:19,806 [Thread-2] INFO  marytts.Praat TextGrid generator Module shut down.
 2017-04-16 00:36:19,807 [Thread-2] INFO  marytts.main Shutdown complete.
+2019-04-11 20:00:38,733 [main] INFO  marytts.main Mary starting up...
+2019-04-11 20:00:38,738 [main] INFO  marytts.main Specification version 5.2
+2019-04-11 20:00:38,738 [main] INFO  marytts.main Implementation version unknown
+2019-04-11 20:00:38,738 [main] INFO  marytts.main Running on a Java 12 implementation by Oracle Corporation, on a Mac OS X platform (x86_64, 10.14.4)
+2019-04-11 20:08:58,929 [main] INFO  marytts.main Mary starting up...
+2019-04-11 20:08:58,975 [main] INFO  marytts.main Specification version 5.2
+2019-04-11 20:08:58,976 [main] INFO  marytts.main Implementation version unknown
+2019-04-11 20:08:58,976 [main] INFO  marytts.main Running on a Java 12 implementation by Oracle Corporation, on a Mac OS X platform (x86_64, 10.14.4)
+2019-04-11 20:15:43,236 [main] INFO  marytts.main Mary starting up...
+2019-04-11 20:15:43,241 [main] INFO  marytts.main Specification version 5.2
+2019-04-11 20:15:43,242 [main] INFO  marytts.main Implementation version unknown
+2019-04-11 20:15:43,242 [main] INFO  marytts.main Running on a Java 12 implementation by Oracle Corporation, on a Mac OS X platform (x86_64, 10.14.4)
