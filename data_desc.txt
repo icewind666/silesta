@@ -1,0 +1,18 @@
+# landings 
+0 simple
+1 funny
+2 sexy
+
+# greetings 
+0 long
+1 short
+2 joke
+
+# content_img
+0 cat
+1 dog
+2 office_girl
+3 sexy_girl
+4 business_man
+5 abstract
+6 cartoon
