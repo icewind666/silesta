@@ -119,36 +119,161 @@ $(function () {
     });
 
 
-    // ------------------------------------------------------ //
-    // For demo purposes, can be deleted
-    // ------------------------------------------------------ //
+});
 
-    if ($('#style-switch').length > 0) {
-        var stylesheet = $('link#theme-stylesheet');
-        $("<link id='new-stylesheet' rel='stylesheet'>").insertAfter(stylesheet);
-        var alternateColour = $('link#new-stylesheet');
 
-        if ($.cookie("theme_csspath")) {
-            alternateColour.attr("href", $.cookie("theme_csspath"));
-        }
+$(document).ready(function () {
+    'use strict';
+    Chart.defaults.global.defaultFontColor = '#75787c';
+    loadBalanceData();
+});
 
-        $("#colour").change(function () {
 
-            if ($(this).val() !== '') {
 
-                var theme_csspath = 'static/css/style.' + $(this).val() + '.css';
+function loadBalanceData() {
+    $.getJSON( "/balance_data", function( data ) {
+           var data_labels = data["labels"];
+           var data_values = data["values"];
+           var min_value = data["min"];
+           var max_value = data["max"];
+           var spent_values = data["spent_values"];
+           var income_values = data["income_values"];
 
-                alternateColour.attr("href", theme_csspath);
-
-                $.cookie("theme_csspath", theme_csspath, {
-                    expires: 365,
-                    path: document.URL.substr(0, document.URL.lastIndexOf('/'))
-                });
-
+            console.log(data_labels);
+            console.log(data_values);
+            // ------------------------------------------------------- //
+            // Line Chart
+            // ------------------------------------------------------ //
+            var legendState = true;
+            if ($(window).outerWidth() < 576) {
+                legendState = false;
             }
 
-            return false;
-        });
-    }
+            var LINECHART = $('#lineCahrt');
+            var myLineChart = new Chart(LINECHART, {
+                type: 'line',
+                options: {
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: false
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                max: max_value,
+                                min: min_value
+                            },
+                            display: true,
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: legendState
+                    }
+                },
+                data: {
+                    labels: data_labels,
+                    datasets: [
+                        {
+                            label: "Баланс",
+                            fill: true,
+                            lineTension: 0.2,
+                            backgroundColor: "transparent",
+                            borderColor: '#864DD9',
+                            pointBorderColor: '#864DD9',
+                            pointHoverBackgroundColor: '#864DD9',
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            borderWidth: 2,
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 5,
+                            pointHoverRadius: 5,
+                            pointHoverBorderColor: "#fff",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 1,
+                            data: data_values,
+                            spanGaps: false
+                        },
+                        {
+                            label: "Расходы",
+                            fill: true,
+                            lineTension: 0.2,
+                            backgroundColor: "transparent",
+                            borderColor: '#EF8C99',
+                            pointBorderColor: '#EF8C99',
+                            pointHoverBackgroundColor: '#EF8C99',
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            borderWidth: 2,
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 5,
+                            pointHoverRadius: 5,
+                            pointHoverBorderColor: "#fff",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 1,
+                            data: spent_values,
+                            spanGaps: false
+                        },
+                        {
+                            label: "Доходы",
+                            fill: true,
+                            lineTension: 0.2,
+                            backgroundColor: "transparent",
+                            borderColor: '#558000',
+                            pointBorderColor: '#558000',
+                            pointHoverBackgroundColor: '#558000',
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            borderWidth: 2,
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 5,
+                            pointHoverRadius: 5,
+                            pointHoverBorderColor: "#fff",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 1,
+                            data: income_values,
+                            spanGaps: false
+                        }
 
-});
+
+        //                {
+        //                    label: "Page Views",
+        //                    fill: true,
+        //                    lineTension: 0.2,
+        //                    backgroundColor: "transparent",
+        //                    borderColor: "#EF8C99",
+        //                    pointBorderColor: '#EF8C99',
+        //                    pointHoverBackgroundColor: "#EF8C99",
+        //                    borderCapStyle: 'butt',
+        //                    borderDash: [],
+        //                    borderDashOffset: 0.0,
+        //                    borderJoinStyle: 'miter',
+        //                    borderWidth: 2,
+        //                    pointBackgroundColor: "#fff",
+        //                    pointBorderWidth: 5,
+        //                    pointHoverRadius: 5,
+        //                    pointHoverBorderColor: "#fff",
+        //                    pointHoverBorderWidth: 2,
+        //                    pointRadius: 1,
+        //                    pointHitRadius: 10,
+        //                    data: [25, 17, 28, 25, 33, 27, 30, 33, 27],
+        //                    spanGaps: false
+        //                }
+                    ]
+                }
+            });
+    });
+}

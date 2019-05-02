@@ -42,7 +42,7 @@
         <div class="container-fluid d-flex align-items-center justify-content-between">
           <div class="navbar-header">
             <!-- Navbar Header--><a href="/" class="navbar-brand">
-              <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">Dark</strong><strong>Admin</strong></div>
+              <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">SILESTA</strong><strong>Admin</strong></div>
               <div class="brand-text brand-sm"><strong class="text-primary">D</strong><strong>A</strong></div></a>
             <!-- Sidebar Toggle Btn-->
             <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
@@ -205,14 +205,14 @@
         <!-- Page Header-->
         <div class="page-header no-margin-bottom">
           <div class="container-fluid">
-            <h2 class="h5 no-margin-bottom">Tables</h2>
+            <h2 class="h5 no-margin-bottom">Транзакции</h2>
           </div>
         </div>
         <!-- Breadcrumb-->
         <div class="container-fluid">
           <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active">Tables        </li>
+            <li class="breadcrumb-item active">Транзакции</li>
           </ul>
         </div>
         <section class="no-padding-top">
@@ -220,11 +220,12 @@
             <div class="row">
               <div class="col-lg-12">
                 <div class="block margin-bottom-sm">
-                  <div class="title"><strong>Basic Table</strong></div>
+                  <div class="title"><strong></strong></div>
                   <div class="table-responsive">
-                    <table class="table table-striped table-sm">
+                    <table class="table table-sm">
                       <thead>
                         <tr>
+                          <th>ID</th>
                           <th>Дата</th>
                           <th>Описание</th>
                           <th>Категория</th>
@@ -242,7 +243,8 @@
                         bgcolor="#334d00"
                         {% endif%}
                         >
-                          <th scope="row">{{p.op_date}}</th>
+                          <th scope="row">{{p.id}}</th>
+                          <td>{{p.op_date}}</th>
                           <td>{{p.desc}}</td>
                           <td>{{p.cat_name}}</td>
                           <td>{{p.amount}}</td>
@@ -253,7 +255,6 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </section>
@@ -261,19 +262,19 @@
           <div class="footer__block block no-margin-bottom">
             <div class="container-fluid text-center">
               <!-- Please do not remove the backlink to us unless you support us at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
-              <p class="no-margin-bottom">2019 &copy; Your company. Design by <a href="https://bootstrapious.com/p/bootstrap-4-dark-admin">Bootstrapious</a>.</p>
+              <p class="no-margin-bottom">2019 &copy; SILESTA. Design by <a href="https://bootstrapious.com/p/bootstrap-4-dark-admin">Bootstrapious</a>.</p>
             </div>
           </div>
         </footer>
       </div>
     </div>
     <!-- JavaScript files-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/popper.js/umd/popper.min.js"> </script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="vendor/chart.js/Chart.min.js"></script>
-    <script src="vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="js/front.js"></script>
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="static/vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="static/vendor/chart.js/Chart.min.js"></script>
+    <script src="static/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="static/js/front.js"></script>
   </body>
 </html>
