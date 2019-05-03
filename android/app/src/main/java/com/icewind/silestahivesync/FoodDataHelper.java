@@ -30,37 +30,6 @@ public class FoodDataHelper {
     private final HealthDataStore mStore;
     private final Handler mResultProcessingHandler;
 
-    // Return the result of inserting successfully
-//    public Single<Boolean> insertNutrition(@NonNull String foodName, float intakeCount, int mealType, long intakeTime) {
-//
-//        Log.i(TAG, "insert nutrition async, title: " + foodName);
-//
-//        HealthDataResolver resolver = new HealthDataResolver(mStore, mResultProcessingHandler);
-//        HealthDataResolver.InsertRequest request = new HealthDataResolver.InsertRequest.Builder().setDataType(HealthConstants.Nutrition.HEALTH_DATA_TYPE).build();
-//        HealthData nutritionData = getNutritionData(foodName, intakeCount, mealType, intakeTime);
-//        request.addHealthData(nutritionData);
-//
-//        return operate(() -> resolver.insert(request))
-//                .map(HealthResultHolder.BaseResult::getStatus)
-//                .map(status -> status == HealthResultHolder.BaseResult.STATUS_SUCCESSFUL)
-//                .doOnError(throwable -> Log.e(TAG, "Failed to insert nutrition", throwable))
-//                .onErrorReturnItem(false);
-//    }
-//
-//    public Single<Boolean> deleteNutrition(@NonNull String uuid) {
-//
-//        HealthDataResolver resolver = new HealthDataResolver(mStore, mResultProcessingHandler);
-//        HealthDataResolver.Filter filter = HealthDataResolver.Filter.eq(HealthConstants.Nutrition.UUID, uuid);
-//        HealthDataResolver.DeleteRequest deleteRequest = new HealthDataResolver.DeleteRequest.Builder()
-//                .setDataType(HealthConstants.Nutrition.HEALTH_DATA_TYPE)
-//                .setFilter(filter)
-//                .build();
-//
-//        return operate(() -> resolver.delete(deleteRequest))
-//                .map(baseResult -> baseResult.getStatus() == HealthResultHolder.BaseResult.STATUS_SUCCESSFUL && baseResult.getCount() >= 1)
-//                .doOnError(throwable -> Log.e(TAG, "Failed to delete nutrition", throwable))
-//                .onErrorReturnItem(false);
-//    }
 
     public Single<DailyIntakeCalories> readDailyIntakeCalories(long startTime) {
 
