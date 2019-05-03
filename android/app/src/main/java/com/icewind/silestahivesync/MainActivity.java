@@ -164,7 +164,11 @@ public class MainActivity extends AppCompatActivity {
         // Add the read and write permissions to Permission KeySet
         pmsKeySet.add(new PermissionKey(Nutrition.HEALTH_DATA_TYPE, PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.StepCount.HEALTH_DATA_TYPE, PermissionType.READ));
-        //pmsKeySet.add(new PermissionKey(HealthConstants.CaffeineIntake.HEALTH_DATA_TYPE, PermissionType.READ));
+        pmsKeySet.add(new PermissionKey(HealthConstants.HeartRate.HEALTH_DATA_TYPE, PermissionType.READ));
+        pmsKeySet.add(new PermissionKey(HealthConstants.Exercise.HEALTH_DATA_TYPE, PermissionType.READ));
+        pmsKeySet.add(new PermissionKey(HealthConstants.AmbientTemperature.HEALTH_DATA_TYPE, PermissionType.READ));
+
+
         //pmsKeySet.add(new PermissionKey(Nutrition.HEALTH_DATA_TYPE, PermissionType.WRITE));
         return pmsKeySet;
     }
