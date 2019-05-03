@@ -4,9 +4,11 @@ import com.samsung.android.sdk.healthdata.HealthConstants;
 
 import java.util.Map;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public class DailyIntakeCalories {
     final float breakfast;
     final float lunch;

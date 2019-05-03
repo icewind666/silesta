@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 //import com.samsung.android.app.foodnote.data.DailyIntakeCalories;
 import com.samsung.android.sdk.healthdata.HealthConnectionErrorResult;
+import com.samsung.android.sdk.healthdata.HealthConstants;
 import com.samsung.android.sdk.healthdata.HealthConstants.Nutrition;
 import com.samsung.android.sdk.healthdata.HealthDataObserver;
 import com.samsung.android.sdk.healthdata.HealthDataStore;
@@ -18,10 +19,12 @@ import com.samsung.android.sdk.healthdata.HealthPermissionManager.PermissionResu
 import com.samsung.android.sdk.healthdata.HealthPermissionManager.PermissionType;
 import com.samsung.android.sdk.healthdata.HealthResultHolder;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TimeZone;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,9 +35,12 @@ public class MainActivity extends AppCompatActivity {
     public static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
     private HealthDataStore mStore;
+    private FoodDataHelper mDataHelper;
     private boolean mIsStoreConnected;
     private Handler mResultProcessingHandler = new Handler();
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private long mDayStartTime;
+
 
 
     private final HealthDataObserver mObserver = new HealthDataObserver(null) {
@@ -157,7 +163,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Add the read and write permissions to Permission KeySet
         pmsKeySet.add(new PermissionKey(Nutrition.HEALTH_DATA_TYPE, PermissionType.READ));
-        pmsKeySet.add(new PermissionKey(Nutrition.HEALTH_DATA_TYPE, PermissionType.WRITE));
+        pmsKeySet.add(new PermissionKey(HealthConstants.StepCount.HEALTH_DATA_TYPE, PermissionType.READ));
+        //pmsKeySet.add(new PermissionKey(HealthConstants.CaffeineIntake.HEALTH_DATA_TYPE, PermissionType.READ));
+        //pmsKeySet.add(new PermissionKey(Nutrition.HEALTH_DATA_TYPE, PermissionType.WRITE));
         return pmsKeySet;
     }
 
@@ -186,6 +194,15 @@ public class MainActivity extends AppCompatActivity {
         // Request the connection to the health data store
         mStore.connectService();
 
+        mDataHelper = new FoodDataHelper(mStore, mResultProcessingHandler);
+        // Get the current time and show it
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        mDayStartTime = calendar.getTimeInMillis();
+        refreshDailyCalories();
     }
 
     private void refreshDailyCalories() {
@@ -202,21 +219,21 @@ public class MainActivity extends AppCompatActivity {
 
     @UiThread
     private void showTotalCalories(DailyIntakeCalories calories) {
-//        float total = calories.getBreakfast() + calories.getLunch() + calories.getDinner()
-//                + calories.getMorningSnack() + calories.getAfternoonSnack() + calories.getEveningSnack();
-//        showTotalCalories(String.valueOf(calories.getBreakfast()),
-//                String.valueOf(calories.getLunch()),
-//                String.valueOf(calories.getDinner()),
-//                String.valueOf(calories.getMorningSnack()),
-//                String.valueOf(calories.getAfternoonSnack()),
-//                String.valueOf(calories.getEveningSnack()),
-//                String.valueOf(total));
+        float total = calories.getBreakfast() + calories.getLunch() + calories.getDinner()
+                + calories.getMorningSnack() + calories.getAfternoonSnack() + calories.getEveningSnack();
+        showTotalCalories(String.valueOf(calories.getBreakfast()),
+                String.valueOf(calories.getLunch()),
+                String.valueOf(calories.getDinner()),
+                String.valueOf(calories.getMorningSnack()),
+                String.valueOf(calories.getAfternoonSnack()),
+                String.valueOf(calories.getEveningSnack()),
+                String.valueOf(total));
     }
 
     @UiThread
     private void showTotalCaloriesFailed(Throwable throwable) {
 //        showTotalCalories("", "", "", "", "", "", "");
-//        Toast.makeText(this, "Failed to read calories : " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Failed to read calories : " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @UiThread
@@ -230,6 +247,15 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(mBinding.afternoonSnack).calorieView.setText(afternoonSnack);
         Objects.requireNonNull(mBinding.eveningSnack).calorieView.setText(eveningSnack);
         mBinding.totalCalorie.setText(total);*/
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        HealthDataObserver.removeObserver(mStore, mObserver);
+
+        mCompositeDisposable.clear();
+        mStore.disconnectService();
     }
 
 }

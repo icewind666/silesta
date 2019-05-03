@@ -62,4 +62,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/samsung-health-data-v1.4.0.jar')
+    annotationProcessor "org.projectlombok:lombok:1.18.6"
+
 }
