@@ -4,6 +4,8 @@ import flask
 import postgresql
 import json
 import locale
+
+import pytz
 from dateutil.relativedelta import relativedelta
 from flask import Flask, render_template, request
 
@@ -68,11 +70,11 @@ def balance():
         min_balance = max(data_values)
         total_min = min([min_income, min_spent, min_balance])
 
-        return flask.jsonify({'labels': date_lables,
-                              'values': data_values,
-                              "min": total_min,
-                              "max": total_max,
-                              "spent_values": spent_values,
+        return flask.jsonify({'labels':        date_lables,
+                              'values':        data_values,
+                              "min":           total_min,
+                              "max":           total_max,
+                              "spent_values":  spent_values,
                               "income_values": income_values})
 
 
@@ -140,12 +142,12 @@ def operations():
             locale.setlocale(locale.LC_ALL, '')
 
             op_object = {
-                "amount": op_amount,
-                "desc": op[1],
-                "cat_name": op[2],
-                "is_income": op[3],
-                "op_date": op[4],
-                "id": op[5]
+                    "amount":    op_amount,
+                    "desc":      op[1],
+                    "cat_name":  op[2],
+                    "is_income": op[3],
+                    "op_date":   op[4],
+                    "id":        op[5]
             }
             mapped_ops.append(op_object)
     return render_template('tables.html', operations=mapped_ops)
@@ -154,33 +156,41 @@ def operations():
 @app.route("/hiveapp", methods=['POST'])
 def hive_sync():
     if request is not None:
-        data = request.json.get("data")
-        meals = data["meals"]
-        steps = data["steps"]
-        heart_rate = data["heart_rate"]
-        exercise = data["exercise"]
-        water = data["water"]
-        temperature = data["temperature"]
+        meals = request.json.get("meals")
+        # meals = data["meals"]
+        steps = request.json.get("steps")
+        # heart_rate = data["heart_rate"]
+        # exercise = data["exercise"]
+        # water = data["water"]
+        # temperature = data["temperature"]
         with postgresql.open(conf["postgresql"]) as db:
+            q = db.prepare("INSERT INTO public.meals(calcium, calories, carbohydate, cholesterol, fat,fiber, iron, "
+                           "meal_type, monosaturated_fat, polysaturated_fat, potassium,protein, saturated_fat, "
+                           "sodium, sugar, total_fat,trans_fat, vitamin_a, vitamin_c,day) VALUES ($1, $2, $3, $4, "
+                           "$5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20);")
+            q_steps = db.prepare("INSERT INTO public.steps(steps, distance, speed, day) VALUES ($1, $2, $3, $4);")
+            day_timestamp = int(request.json.get("dayStart"))
+            day = datetime.datetime.fromtimestamp(day_timestamp / 1000.0)
+
             if meals is not None:
-                q = "INSERT INTO public.meals(day, id, meal_type, calories, protein, vitamin_c, vitamin_a," \ 
-            "fat, carbohydate, potassium, total_fat, calcium, cholesterol," \ 
-            "fiber, iron, monosaturated_fat, polysaturated_fat, saturated_fat," \ 
-            "sodium, sugar, trans_fat)"\
-    "VALUES (?, ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?,
-            ?, ?, ?);
-"
+                rows = []
+                for one_meal in meals:
+                    args = get_args_with_day(one_meal, day)
+                    rows.append(args)
+                q.load_rows(rows)
 
-
-            ops = db.query("SELECT bank_operations.amount,bank_operations.\"desc\",bank_operations.cat_name,"
-                           "bank_operations.is_income,bank_operations.op_date,bank_operations.id FROM   "
-                           "public.bank_operations order by op_date desc;")
-
+            if steps is not None:
+                step_args = (steps["count"], steps["distance"], steps["speed"], day)
+                q_steps.load_rows([step_args])
 
     print("Request received!")
     return "ok"
+
+
+def get_args_with_day(args, day):
+    x = [x for x in args.values()]
+    x.append(day)
+    return tuple(x)
 
 
 if __name__ == '__main__':

@@ -2,22 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d8deb9e-23d0-4ecd-ab47-1ae00a065229" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/HiveSyncDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/ISilestaApi.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/MealDetails.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/NetworkService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/OnStepResultHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/StepsInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/DailyIntakeCalories.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/DailyIntakeDetails.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/FoodDataHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/FoodDataHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/FoodInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/java/com/icewind/silestahivesync/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../android/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../android/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web.config" beforeDir="false" afterPath="$PROJECT_DIR$/web.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web.py" beforeDir="false" afterPath="$PROJECT_DIR$/web.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,8 +15,29 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="3" column="17" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="17" />
+            <state relative-caret-position="214">
+              <caret line="161" column="41" lean-forward="true" selection-start-line="161" selection-start-column="41" selection-end-line="161" selection-end-column="41" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://D:/anaconda3/Lib/site-packages/postgresql/driver/pq3.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="2335" selection-start-line="2335" selection-end-line="2335" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://D:/anaconda3/Lib/site-packages/flask/app.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="168">
+              <caret line="1597" selection-start-line="1597" selection-end-line="1597" />
             </state>
           </provider>
         </entry>
@@ -209,7 +214,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.43311402" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39364034" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39364034" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -231,19 +236,69 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/web.py</url>
-          <line>155</line>
+          <line>157</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/web.py</url>
+          <line>177</line>
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="request" language="Python" />
+        <watch expression="(x for x in meal.values())" language="Python" />
+        <watch expression="meal.items()" language="Python" />
+        <watch expression="meal.values()" language="Python" />
+        <watch expression="list(meal)" language="Python" />
+        <watch expression="__py_debug_temp_var_394530958" />
       </configuration>
     </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>list(meal)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>meal.iteritems()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>meal.itervalues()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>meal.values()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>meal.items()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>(x for x in meal.values())</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>meal.values</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>[x for x in meal.values()]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>request</expression-string>
         <language-id>Python</language-id>
@@ -307,17 +362,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://D:/anaconda3/Lib/site-packages/postgresql/driver/pq3.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="2335" selection-start-line="2335" selection-end-line="2335" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://D:/anaconda3/Lib/site-packages/flask/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="1599" column="36" lean-forward="true" selection-start-line="1599" selection-start-column="36" selection-end-line="1599" selection-end-column="36" />
+        <state relative-caret-position="168">
+          <caret line="1597" selection-start-line="1597" selection-end-line="1597" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/web.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="3" column="17" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="17" />
+        <state relative-caret-position="214">
+          <caret line="161" column="41" lean-forward="true" selection-start-line="161" selection-start-column="41" selection-end-line="161" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
