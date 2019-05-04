@@ -63,5 +63,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/samsung-health-data-v1.4.0.jar')
     annotationProcessor "org.projectlombok:lombok:1.18.6"
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
 }

@@ -5,7 +5,7 @@ import postgresql
 import json
 import locale
 from dateutil.relativedelta import relativedelta
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -149,6 +149,38 @@ def operations():
             }
             mapped_ops.append(op_object)
     return render_template('tables.html', operations=mapped_ops)
+
+
+@app.route("/hiveapp", methods=['POST'])
+def hive_sync():
+    if request is not None:
+        data = request.json.get("data")
+        meals = data["meals"]
+        steps = data["steps"]
+        heart_rate = data["heart_rate"]
+        exercise = data["exercise"]
+        water = data["water"]
+        temperature = data["temperature"]
+        with postgresql.open(conf["postgresql"]) as db:
+            if meals is not None:
+                q = "INSERT INTO public.meals(day, id, meal_type, calories, protein, vitamin_c, vitamin_a," \ 
+            "fat, carbohydate, potassium, total_fat, calcium, cholesterol," \ 
+            "fiber, iron, monosaturated_fat, polysaturated_fat, saturated_fat," \ 
+            "sodium, sugar, trans_fat)"\
+    "VALUES (?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?,
+            ?, ?, ?);
+"
+
+
+            ops = db.query("SELECT bank_operations.amount,bank_operations.\"desc\",bank_operations.cat_name,"
+                           "bank_operations.is_income,bank_operations.op_date,bank_operations.id FROM   "
+                           "public.bank_operations order by op_date desc;")
+
+
+    print("Request received!")
+    return "ok"
 
 
 if __name__ == '__main__':
