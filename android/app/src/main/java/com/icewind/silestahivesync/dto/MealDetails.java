@@ -1,4 +1,4 @@
-package com.icewind.silestahivesync;
+package com.icewind.silestahivesync.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-class MealDetails {
+public class MealDetails {
     private float calories = 0f;
     private float protein = 0f;
     private float vitaminC = 0f;
@@ -29,10 +29,10 @@ class MealDetails {
 
     private String mealType;
 
-    MealDetails(float calories, float protein, float vitaminC, float vitaminA, float fat,
-                float carbohydate, float potassium, float totalFat, float calcium, float cholesterol,
-                float fiber, float iron, float monosaturatedFat, float polysaturatedFat, float saturatedFat,
-                float sodium, float sugar, float transFat, String mealType) {
+    public MealDetails(float calories, float protein, float vitaminC, float vitaminA, float fat,
+                       float carbohydate, float potassium, float totalFat, float calcium, float cholesterol,
+                       float fiber, float iron, float monosaturatedFat, float polysaturatedFat, float saturatedFat,
+                       float sodium, float sugar, float transFat, String mealType) {
         this.calcium = calcium;
         this.calories = calories;
         this.protein = protein;

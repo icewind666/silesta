@@ -6,15 +6,16 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.icewind.silestahivesync.dto.MealDetails;
+import com.icewind.silestahivesync.dto.NutritionDto;
+import com.icewind.silestahivesync.dto.StepsDto;
 import com.samsung.android.sdk.healthdata.HealthConnectionErrorResult;
 import com.samsung.android.sdk.healthdata.HealthConstants;
 import com.samsung.android.sdk.healthdata.HealthConstants.Nutrition;
-import com.samsung.android.sdk.healthdata.HealthDataObserver;
 import com.samsung.android.sdk.healthdata.HealthDataStore;
 import com.samsung.android.sdk.healthdata.HealthPermissionManager;
 import com.samsung.android.sdk.healthdata.HealthPermissionManager.PermissionKey;
@@ -44,14 +45,13 @@ public class MainActivity extends AppCompatActivity {
     public static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
     private HealthDataStore mStore;
-    private FoodDataHelper mDataHelper;
+    private DeviceDataHelper mDataHelper;
     private boolean mIsStoreConnected;
     private Handler mResultProcessingHandler = new Handler();
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private long mDayStartTime;
 
     private List<MealDetails> meals = new ArrayList<>();
-    private StepsInfo steps;
 
     @BindView(R.id.statusText)
     TextView mStatusTextArea;
@@ -59,15 +59,15 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.sendBtn)
     Button mSendBtn;
 
-    private final HealthDataObserver mObserver = new HealthDataObserver(null) {
-        @Override
-        public void onChange(String dataTypeName) {
-            Log.d(TAG, "onChange");
-            if (Nutrition.HEALTH_DATA_TYPE.equals(dataTypeName)) {
-                getDailyHealthInformation();
-            }
-        }
-    };
+//    private final HealthDataObserver mObserver = new HealthDataObserver(null) {
+//        @Override
+//        public void onChange(String dataTypeName) {
+//            Log.d(TAG, "onChange");
+//            if (Nutrition.HEALTH_DATA_TYPE.equals(dataTypeName)) {
+//                getDailyHealthInformation();
+//            }
+//        }
+//    };
 
     private final HealthDataStore.ConnectionListener mConnectionListener = new HealthDataStore.ConnectionListener() {
         @Override
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onConnected");
             mIsStoreConnected = true;
             if (isPermissionAcquired()) {
-                getDailyHealthInformation();
+                gatherDataFromDevice();
             } else {
                 requestPermission();
             }
@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         pmsKeySet.add(new PermissionKey("com.samsung.shealth.step_daily_trend", PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.HeartRate.HEALTH_DATA_TYPE, PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.Exercise.HEALTH_DATA_TYPE, PermissionType.READ));
+        pmsKeySet.add(new PermissionKey(HealthConstants.CaffeineIntake.HEALTH_DATA_TYPE, PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.WaterIntake.HEALTH_DATA_TYPE, PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.AmbientTemperature.HEALTH_DATA_TYPE, PermissionType.READ));
         return pmsKeySet;
@@ -183,17 +184,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void handlePermissionResult(PermissionResult result) {
         Map<PermissionKey, Boolean> resultMap = result.getResultMap();
-        // Show a permission alarm and initializes the calories if
-        // permissions are not acquired
         if (resultMap.values().contains(Boolean.FALSE)) {
             showPermissionAlarmDialog();
         } else {
-            // Get the calories of Indexed time and display it
-            getDailyHealthInformation();
-            // Register an observer to listen changes of the calories
-//            HealthDataObserver.addObserver(mStore, Nutrition.HEALTH_DATA_TYPE, mObserver);
-//            HealthDataObserver.addObserver(mStore, HealthConstants.StepCount.HEALTH_DATA_TYPE, mObserver);
-//            HealthDataObserver.addObserver(mStore, HealthConstants.Exercise.HEALTH_DATA_TYPE, mObserver);
+            gatherDataFromDevice();
         }
     }
 
@@ -207,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         // Create a HealthDataStore instance and set its listener
         mStore = new HealthDataStore(this, mConnectionListener);
         mStore.connectService();
-        mDataHelper = new FoodDataHelper(mStore, mResultProcessingHandler);
+        mDataHelper = new DeviceDataHelper(mStore, mResultProcessingHandler);
 
         // Get the current time and show it
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
@@ -217,20 +211,26 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.MILLISECOND, 0);
         mDayStartTime = calendar.getTimeInMillis();
 
-        getDailyHealthInformation();
-
         mSendBtn.setOnClickListener(view -> {
-            HiveSyncDto dto = new HiveSyncDto();
-            dto.setSteps(steps);
-            dto.setMeals(meals);
-            dto.setDayStart(mDayStartTime);
-            dto.status = false;
-
-            sendDataToHive(dto);
+            //sendNutrition();
+            //sendSteps();
+            //            sendWater();
+            //            sendExercises();
+            //            sendCoffee();
+            //            sendSleep();
         });
     }
 
-    private void getDailyHealthInformation() {
+    private void sendNutrition(List<MealDetails> d) {
+        NutritionDto dto = new NutritionDto();
+        //dto.setSteps(steps);
+        dto.setMeals(meals);
+        dto.setDayStart(mDayStartTime);
+        dto.status = false;
+        sendNutritionDataToHive(dto);
+    }
+
+    private void gatherDataFromDevice() {
         if (!mIsStoreConnected) {
             mStatusTextArea.append("\nCant connect to health data store\n");
             return;
@@ -238,25 +238,20 @@ public class MainActivity extends AppCompatActivity {
         mCompositeDisposable.add(mDataHelper.readDailyIntakeDetails(mDayStartTime)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(MainActivity.this::saveMealDetails,
+                .subscribe(MainActivity.this::sendNutrition,
                         MainActivity.this::showTotalCaloriesFailed)
         );
 
         mDataHelper.readStepCount(mDayStartTime,
-                (steps, distance, speed) -> MainActivity.this.saveSteps(new StepsInfo(steps,
+                (steps, distance, speed) -> MainActivity.this.sendSteps(new StepsDto(steps,
                         distance,speed, mDayStartTime, mDayStartTime+ONE_DAY)));
+
+        mDataHelper.readSleepStages(mDayStartTime,
+                (steps, distance, speed) -> MainActivity.this.sendSteps(new StepsDto(steps,
+                        distance,speed, mDayStartTime, mDayStartTime+ONE_DAY)));
+
     }
 
-    private void saveMealDetails(List<MealDetails> d) {
-        meals.addAll(d);
-        mStatusTextArea.append("Nutrition data received\n");
-    }
-
-    private void saveSteps(StepsInfo info) {
-        Log.d(TAG, info.toString());
-        steps = info;
-        mStatusTextArea.append("Steps data received\n");
-    }
 
     private void showTotalCaloriesFailed(Throwable throwable) {
         Toast.makeText(this, "Failed to read calories : " + throwable.getMessage(),
@@ -266,25 +261,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        HealthDataObserver.removeObserver(mStore, mObserver);
+        //HealthDataObserver.removeObserver(mStore, mObserver);
         mCompositeDisposable.clear();
         mStore.disconnectService();
     }
 
+    private void sendSteps(StepsDto dto) {
 
-    private void sendDataToHive(HiveSyncDto dto) {
+    }
+
+    private void sendNutritionDataToHive(NutritionDto dto) {
         NetworkService.getInstance()
                 .getSilestaApi()
-                .sendDeviceData(dto)
-                .enqueue(new Callback<HiveSyncDto>() {
+                .sendNutrition(dto)
+                .enqueue(new Callback<NutritionDto>() {
                     @Override
-                    public void onResponse(@NonNull Call<HiveSyncDto> call,
-                                           @NonNull Response<HiveSyncDto> response) {
+                    public void onResponse(@NonNull Call<NutritionDto> call,
+                                           @NonNull Response<NutritionDto> response) {
                         mStatusTextArea.append("\nData sent. Response received\n");
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<HiveSyncDto> call,
+                    public void onFailure(@NonNull Call<NutritionDto> call,
                                           @NonNull Throwable t) {
                         mStatusTextArea.append("\nResponse received: error\n");
                         mStatusTextArea.append("\n");

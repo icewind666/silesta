@@ -155,28 +155,39 @@ def operations():
 
 @app.route("/hiveapp", methods=['POST'])
 def hive_sync():
+    """
+    Save data provided by device.
+    Currently supported Samsung Health format.
+    :return:
+    """
     if request is not None:
         meals = request.json.get("meals")
-        # meals = data["meals"]
         steps = request.json.get("steps")
         # heart_rate = data["heart_rate"]
         # exercise = data["exercise"]
         # water = data["water"]
         # temperature = data["temperature"]
         with postgresql.open(conf["postgresql"]) as db:
+            day_timestamp = int(request.json.get("dayStart"))
+            day = datetime.datetime.fromtimestamp(day_timestamp / 1000.0)
+
             q = db.prepare("INSERT INTO public.meals(calcium, calories, carbohydate, cholesterol, fat,fiber, iron, "
                            "meal_type, monosaturated_fat, polysaturated_fat, potassium,protein, saturated_fat, "
                            "sodium, sugar, total_fat,trans_fat, vitamin_a, vitamin_c,day) VALUES ($1, $2, $3, $4, "
                            "$5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20);")
             q_steps = db.prepare("INSERT INTO public.steps(steps, distance, speed, day) VALUES ($1, $2, $3, $4);")
-            day_timestamp = int(request.json.get("dayStart"))
-            day = datetime.datetime.fromtimestamp(day_timestamp / 1000.0)
 
             if meals is not None:
                 rows = []
                 for one_meal in meals:
-                    args = get_args_with_day(one_meal, day)
-                    rows.append(args)
+                    # check if update needed. not insert
+                    if day_meal_already_added(db, day, one_meal["meal_type"]):
+                        update_day_meal_data(db, day, one_meal)
+                    else:
+                        x = [x for x in one_meal.values()]
+                        args_list_with_day = x.append(day)
+                        tuple_args = tuple(args_list_with_day)
+                        rows.append(tuple_args)
                 q.load_rows(rows)
 
             if steps is not None:
@@ -187,10 +198,84 @@ def hive_sync():
     return "ok"
 
 
-def get_args_with_day(args, day):
-    x = [x for x in args.values()]
-    x.append(day)
-    return tuple(x)
+def update_day_meal_data(db_conn, day, meal):
+    """
+    Update nutrition data from application for the given day.
+    Data for that day is overwritten totally.
+    We assume that devices have the most recent measurements
+    :return:
+    """
+    q_update = db_conn.prepare("UPDATE public.meals SET calcium=$1, calories=$2, carbohydate=$3, cholesterol=$4, "
+                               "fat=$5,fiber=$6, iron=$7, monosaturated_fat=$8, polysaturated_fat=$9, potassium=$10,"
+                               "protein=$11, saturated_fat=$12, sodium=$13, sugar=$14, total_fat=$15,trans_fat=$16, "
+                               "vitamin_a=$17, vitamin_c=$18 where day=$19 and meal_type=$20")
+    meal_update_query_row = q_update(
+            meal["calcium"],
+            meal["calories"],
+            meal["carbohydate"],
+            meal["cholesterol"],
+            meal["fat"],
+            meal["fiber"],
+            meal["iron"],
+            meal["monosaturated_fat"],
+            meal["polysaturated_fat"],
+            meal["potassium"],
+            meal["protein"],
+            meal["saturated_fat"],
+            meal["sodium"],
+            meal["sugar"],
+            meal["total_fat"],
+            meal["trans_fat"],
+            meal["vitamin_a"],
+            meal["vitamin_c"],
+            day,
+            meal
+    )
+    q_update.load_rows([meal_update_query_row])
+
+
+def update_day_step_data(db_conn, day, step_info):
+    """
+    Update steps data from application for the given day.
+    Data for that day is overwritten totally.
+    We assume that devices have the most recent measurements
+    :return:
+    """
+    q_update = db_conn.prepare("UPDATE public.steps SET count=$1, distance=$2, speed=$3 where day=$4")
+    meal_update_query_row = q_update(
+            step_info["count"],
+            step_info["distance"],
+            step_info["speed"],
+            day
+    )
+    q_update.load_rows([meal_update_query_row])
+
+
+def day_meal_already_added(db_conn, day, meal):
+    """
+    Returns True is given day already have meals info
+    :param db_conn:
+    :param day:
+    :param meal:
+    :return:
+    """
+    r = db_conn.query("select day from public.meals where day=$1 and meal_type=$2", day, meal)
+    if r is not None and r[0] is not None:
+        return True
+    return False
+
+
+def day_steps_already_added(db_conn, day):
+    """
+    Returns True if given day already have steps info
+    :param db_conn:
+    :param day:
+    :return:
+    """
+    r = db_conn.query("select day from public.steps where day=$1", day)
+    if r is not None and r[0] is not None:
+        return True
+    return False
 
 
 if __name__ == '__main__':

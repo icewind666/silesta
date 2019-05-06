@@ -4,22 +4,21 @@ package com.icewind.silestahivesync;
 import android.os.Handler;
 import android.util.Log;
 
+import com.icewind.silestahivesync.dto.MealDetails;
 import com.samsung.android.sdk.healthdata.HealthConstants;
 import com.samsung.android.sdk.healthdata.HealthData;
 import com.samsung.android.sdk.healthdata.HealthDataResolver;
 import com.samsung.android.sdk.healthdata.HealthDataStore;
 import com.samsung.android.sdk.healthdata.HealthResultHolder;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Single;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-class FoodDataHelper {
+class DeviceDataHelper {
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
     private final HealthDataStore mStore;
     private final Handler mResultProcessingHandler;
@@ -83,12 +82,64 @@ class FoodDataHelper {
 
 
     // Read the today's step count on demand
-    protected void readStepCount(long startTime, OnStepResultHandler handler) {
+    public void readStepCount(long startTime, OnStepResultHandler handler) {
         // Read the today's step count on demand
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
         HealthDataResolver.Filter filter = HealthDataResolver.Filter.and(
                 HealthDataResolver.Filter.eq(HealthConstants.StepCount.SAMPLE_POSITION_TYPE,
                         HealthConstants.StepCount.SAMPLE_POSITION_TYPE_WRIST));
+
+        HealthResultHolder.ResultListener<HealthDataResolver.ReadResult> mListener = result -> {
+            int count = 0;
+            float speed = 0;
+            float totalDistance = 0;
+            int recordCount = result.getCount();
+            try {
+                for (HealthData data : result) {
+                    Log.d("TAG", data.getContentValues().toString());
+                    count += data.getInt(HealthConstants.StepCount.COUNT);
+                    totalDistance += data.getFloat(HealthConstants.StepCount.DISTANCE);
+                    speed += data.getFloat(HealthConstants.StepCount.SPEED);
+                }
+
+                handler.handle(count, totalDistance, speed/recordCount);
+            } finally {
+                result.close();
+            }
+        };
+        // Set time range from start time of today to the current time
+
+        long endTime = startTime + ONE_DAY;
+
+        HealthDataResolver.ReadRequest request = new HealthDataResolver.ReadRequest.Builder()
+                .setDataType(HealthConstants.StepCount.HEALTH_DATA_TYPE)
+                .setProperties(new String[] {HealthConstants.StepCount.COUNT,
+                        HealthConstants.StepCount.DISTANCE,
+                        HealthConstants.StepCount.UUID,
+                        HealthConstants.StepCount.PACKAGE_NAME,
+                        HealthConstants.StepCount.CUSTOM,
+                        HealthConstants.StepCount.SAMPLE_POSITION_TYPE,
+                        HealthConstants.StepCount.SPEED
+                })
+                .setFilter(filter)
+                .setLocalTimeRange(HealthConstants.StepCount.START_TIME, HealthConstants.StepCount.TIME_OFFSET,
+                        startTime, endTime)
+                .build();
+
+        try {
+            resolver.read(request).setResultListener(mListener);
+        } catch (Exception e) {
+            Log.e(MainActivity.TAG, "Getting step count fails.", e);
+        }
+    }
+
+    // Read the today's step count on demand
+    public void readSleepStages(long startTime, OnStepResultHandler handler) {
+        // Read the today's step count on demand
+        HealthDataResolver resolver = new HealthDataResolver(mStore, null);
+//        HealthDataResolver.Filter filter = HealthDataResolver.Filter.and(
+//                HealthDataResolver.Filter.eq(HealthConstants.StepCount.SAMPLE_POSITION_TYPE,
+//                        HealthConstants.StepCount.SAMPLE_POSITION_TYPE_WRIST));
 
         HealthResultHolder.ResultListener<HealthDataResolver.ReadResult> mListener = result -> {
             int count = 0;
