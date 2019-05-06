@@ -173,7 +173,7 @@ class DeviceDataHelper {
                         HealthConstants.StepCount.SAMPLE_POSITION_TYPE,
                         HealthConstants.StepCount.SPEED
                 })
-                .setFilter(filter)
+                //.setFilter(filter)
                 .setLocalTimeRange(HealthConstants.StepCount.START_TIME, HealthConstants.StepCount.TIME_OFFSET,
                         startTime, endTime)
                 .build();
