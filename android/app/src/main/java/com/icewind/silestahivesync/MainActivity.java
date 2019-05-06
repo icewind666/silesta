@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.icewind.silestahivesync.dto.MealDetails;
 import com.icewind.silestahivesync.dto.NutritionDto;
+import com.icewind.silestahivesync.dto.SleepStageDto;
 import com.icewind.silestahivesync.dto.StepsDto;
 import com.samsung.android.sdk.healthdata.HealthConnectionErrorResult;
 import com.samsung.android.sdk.healthdata.HealthConstants;
@@ -179,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         pmsKeySet.add(new PermissionKey(HealthConstants.CaffeineIntake.HEALTH_DATA_TYPE, PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.WaterIntake.HEALTH_DATA_TYPE, PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.AmbientTemperature.HEALTH_DATA_TYPE, PermissionType.READ));
+        pmsKeySet.add(new PermissionKey(HealthConstants.SleepStage.HEALTH_DATA_TYPE, PermissionType.READ));
         return pmsKeySet;
     }
 
@@ -230,6 +232,10 @@ public class MainActivity extends AppCompatActivity {
         sendNutritionDataToHive(dto);
     }
 
+    /**
+     * Main logic.
+     * Gather all from device and send to SILESTA
+     */
     private void gatherDataFromDevice() {
         if (!mIsStoreConnected) {
             mStatusTextArea.append("\nCant connect to health data store\n");
@@ -243,12 +249,31 @@ public class MainActivity extends AppCompatActivity {
         );
 
         mDataHelper.readStepCount(mDayStartTime,
-                (steps, distance, speed) -> MainActivity.this.sendSteps(new StepsDto(steps,
-                        distance,speed, mDayStartTime, mDayStartTime+ONE_DAY)));
+                new OnSamsungHealthResult() {
+                    @Override
+                    public void handle(long steps, float distance, float speed) {
+                        MainActivity.this.sendSteps(new StepsDto(steps,
+                                distance,speed, mDayStartTime, mDayStartTime+ONE_DAY));
+                    }
+                    @Override
+                    public void handleSleep(SleepStageDto[] stages) {
+
+                    }
+                });
+
 
         mDataHelper.readSleepStages(mDayStartTime,
-                (steps, distance, speed) -> MainActivity.this.sendSteps(new StepsDto(steps,
-                        distance,speed, mDayStartTime, mDayStartTime+ONE_DAY)));
+                new OnSamsungHealthResult() {
+                    @Override
+                    public void handle(long steps, float distance, float speed) {
+                        MainActivity.this.sendSteps(new StepsDto(steps,
+                                distance,speed, mDayStartTime, mDayStartTime+ONE_DAY));
+                    }
+                    @Override
+                    public void handleSleep(SleepStageDto[] stages) {
+                        MainActivity.this.sendSleep(stages);
+                    }
+                });
 
     }
 
@@ -261,13 +286,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //HealthDataObserver.removeObserver(mStore, mObserver);
         mCompositeDisposable.clear();
         mStore.disconnectService();
     }
 
     private void sendSteps(StepsDto dto) {
+        //TODO: implement
+    }
 
+    private void sendSleep(SleepStageDto[] stages) {
+        //TODO: implement
     }
 
     private void sendNutritionDataToHive(NutritionDto dto) {

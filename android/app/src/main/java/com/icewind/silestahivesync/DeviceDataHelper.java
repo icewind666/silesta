@@ -5,12 +5,14 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.icewind.silestahivesync.dto.MealDetails;
+import com.icewind.silestahivesync.dto.SleepStageDto;
 import com.samsung.android.sdk.healthdata.HealthConstants;
 import com.samsung.android.sdk.healthdata.HealthData;
 import com.samsung.android.sdk.healthdata.HealthDataResolver;
 import com.samsung.android.sdk.healthdata.HealthDataStore;
 import com.samsung.android.sdk.healthdata.HealthResultHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -82,7 +84,7 @@ class DeviceDataHelper {
 
 
     // Read the today's step count on demand
-    public void readStepCount(long startTime, OnStepResultHandler handler) {
+    public void readStepCount(long startTime, OnSamsungHealthResult handler) {
         // Read the today's step count on demand
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
         HealthDataResolver.Filter filter = HealthDataResolver.Filter.and(
@@ -134,27 +136,20 @@ class DeviceDataHelper {
     }
 
     // Read the today's step count on demand
-    public void readSleepStages(long startTime, OnStepResultHandler handler) {
-        // Read the today's step count on demand
+    public void readSleepStages(long startTime, OnSamsungHealthResult handler) {
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
-//        HealthDataResolver.Filter filter = HealthDataResolver.Filter.and(
-//                HealthDataResolver.Filter.eq(HealthConstants.StepCount.SAMPLE_POSITION_TYPE,
-//                        HealthConstants.StepCount.SAMPLE_POSITION_TYPE_WRIST));
 
         HealthResultHolder.ResultListener<HealthDataResolver.ReadResult> mListener = result -> {
-            int count = 0;
-            float speed = 0;
-            float totalDistance = 0;
-            int recordCount = result.getCount();
+            List<SleepStageDto> stages = new ArrayList<>();
             try {
                 for (HealthData data : result) {
-                    Log.d("TAG", data.getContentValues().toString());
-                    count += data.getInt(HealthConstants.StepCount.COUNT);
-                    totalDistance += data.getFloat(HealthConstants.StepCount.DISTANCE);
-                    speed += data.getFloat(HealthConstants.StepCount.SPEED);
+                    SleepStageDto dto = new SleepStageDto();
+                    dto.setStage(data.getString(HealthConstants.SleepStage.STAGE));
+                    dto.setStageStart(data.getLong(HealthConstants.SleepStage.START_TIME));
+                    dto.setStageStart(data.getLong(HealthConstants.SleepStage.END_TIME));
+                    stages.add(dto);
                 }
-
-                handler.handle(count, totalDistance, speed/recordCount);
+                handler.handleSleep(stages.toArray(new SleepStageDto[0]));
             } finally {
                 result.close();
             }
@@ -164,24 +159,21 @@ class DeviceDataHelper {
         long endTime = startTime + ONE_DAY;
 
         HealthDataResolver.ReadRequest request = new HealthDataResolver.ReadRequest.Builder()
-                .setDataType(HealthConstants.StepCount.HEALTH_DATA_TYPE)
-                .setProperties(new String[] {HealthConstants.StepCount.COUNT,
-                        HealthConstants.StepCount.DISTANCE,
-                        HealthConstants.StepCount.UUID,
-                        HealthConstants.StepCount.PACKAGE_NAME,
-                        HealthConstants.StepCount.CUSTOM,
-                        HealthConstants.StepCount.SAMPLE_POSITION_TYPE,
-                        HealthConstants.StepCount.SPEED
+                .setDataType(HealthConstants.SleepStage.HEALTH_DATA_TYPE)
+                .setProperties(new String[] {HealthConstants.SleepStage.STAGE,
+                        HealthConstants.SleepStage.CUSTOM,
+                        HealthConstants.SleepStage.SLEEP_ID,
+                        HealthConstants.SleepStage.PACKAGE_NAME,
+                        HealthConstants.SleepStage.START_TIME
                 })
-                //.setFilter(filter)
-                .setLocalTimeRange(HealthConstants.StepCount.START_TIME, HealthConstants.StepCount.TIME_OFFSET,
+                .setLocalTimeRange(HealthConstants.SleepStage.START_TIME, HealthConstants.SleepStage.TIME_OFFSET,
                         startTime, endTime)
                 .build();
 
         try {
             resolver.read(request).setResultListener(mListener);
         } catch (Exception e) {
-            Log.e(MainActivity.TAG, "Getting step count fails.", e);
+            Log.e(MainActivity.TAG, "Getting sleep count fails.", e);
         }
     }
 
