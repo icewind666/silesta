@@ -10,8 +10,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.icewind.silestahivesync.dto.BaseApiDto;
+import com.icewind.silestahivesync.dto.DailyExercises;
 import com.icewind.silestahivesync.dto.MealDetails;
 import com.icewind.silestahivesync.dto.NutritionDto;
+import com.icewind.silestahivesync.dto.SleepDto;
 import com.icewind.silestahivesync.dto.SleepStageDto;
 import com.icewind.silestahivesync.dto.StepsDto;
 import com.samsung.android.sdk.healthdata.HealthConnectionErrorResult;
@@ -24,6 +27,7 @@ import com.samsung.android.sdk.healthdata.HealthPermissionManager.PermissionResu
 import com.samsung.android.sdk.healthdata.HealthPermissionManager.PermissionType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -214,22 +218,16 @@ public class MainActivity extends AppCompatActivity {
         mDayStartTime = calendar.getTimeInMillis();
 
         mSendBtn.setOnClickListener(view -> {
-            //sendNutrition();
-            //sendSteps();
-            //            sendWater();
-            //            sendExercises();
-            //            sendCoffee();
-            //            sendSleep();
+            gatherDataFromDevice();
         });
     }
 
     private void sendNutrition(List<MealDetails> d) {
         NutritionDto dto = new NutritionDto();
-        //dto.setSteps(steps);
-        dto.setMeals(meals);
+        dto.setMeals(d);
         dto.setDayStart(mDayStartTime);
         dto.status = false;
-        sendNutritionDataToHive(dto);
+       //sendNutritionDataToHive(dto);
     }
 
     /**
@@ -249,32 +247,29 @@ public class MainActivity extends AppCompatActivity {
         );
 
         mDataHelper.readStepCount(mDayStartTime,
-                new OnSamsungHealthResult() {
-                    @Override
-                    public void handle(long steps, float distance, float speed) {
-                        MainActivity.this.sendSteps(new StepsDto(steps,
-                                distance,speed, mDayStartTime, mDayStartTime+ONE_DAY));
-                    }
-                    @Override
-                    public void handleSleep(SleepStageDto[] stages) {
-
+                result -> {
+                    if (result instanceof StepsDto) {
+                        Log.d(TAG, "Steps done");
+                        //MainActivity.this.sendSteps((StepsDto) result);
                     }
                 });
 
 
         mDataHelper.readSleepStages(mDayStartTime,
-                new OnSamsungHealthResult() {
-                    @Override
-                    public void handle(long steps, float distance, float speed) {
-                        MainActivity.this.sendSteps(new StepsDto(steps,
-                                distance,speed, mDayStartTime, mDayStartTime+ONE_DAY));
-                    }
-                    @Override
-                    public void handleSleep(SleepStageDto[] stages) {
-                        MainActivity.this.sendSleep(stages);
+                result -> {
+                    if (result instanceof SleepDto) {
+                        Log.d(TAG, "Sleeps done");
+                        //MainActivity.this.sendSleep((SleepDto)result);
                     }
                 });
 
+        mDataHelper.readExercises(mDayStartTime,
+                result -> {
+                    if (result instanceof DailyExercises) {
+                        Log.d(TAG, "DailyExercises done");
+                        //MainActivity.this.sendExercises((DailyExercises) result);
+                    }
+                });
     }
 
 
@@ -292,11 +287,75 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendSteps(StepsDto dto) {
         //TODO: implement
+        NetworkService.getInstance()
+                .getSilestaApi()
+                .sendSteps(dto)
+                .enqueue(new Callback<StepsDto>() {
+                    @Override
+                    public void onResponse(@NonNull Call<StepsDto> call,
+                                           @NonNull Response<StepsDto> response) {
+                        mStatusTextArea.append("\nData sent. Response received\n");
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<StepsDto> call,
+                                          @NonNull Throwable t) {
+                        mStatusTextArea.append("\nResponse received: error\n");
+                        mStatusTextArea.append("\n");
+                        mStatusTextArea.append(t.toString());
+                        mStatusTextArea.append("\n");
+                        Log.d(TAG, "Response received : FAIL");
+                    }
+                });
+
     }
 
-    private void sendSleep(SleepStageDto[] stages) {
-        //TODO: implement
+    private void sendSleep(SleepDto sleepInfo) {
+        NetworkService.getInstance()
+                .getSilestaApi()
+                .sendSleep(sleepInfo)
+                .enqueue(new Callback<SleepDto>() {
+                    @Override
+                    public void onResponse(@NonNull Call<SleepDto> call,
+                                           @NonNull Response<SleepDto> response) {
+                        mStatusTextArea.append("\nData sent. Response received\n");
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<SleepDto> call,
+                                          @NonNull Throwable t) {
+                        mStatusTextArea.append("\nResponse received: error\n");
+                        mStatusTextArea.append("\n");
+                        mStatusTextArea.append(t.toString());
+                        mStatusTextArea.append("\n");
+                        Log.d(TAG, "Response received : FAIL");
+                    }
+                });
     }
+
+    private void sendExercises(DailyExercises dto) {
+        NetworkService.getInstance()
+                .getSilestaApi()
+                .sendExercises(dto)
+                .enqueue(new Callback<DailyExercises>() {
+                    @Override
+                    public void onResponse(@NonNull Call<DailyExercises> call,
+                                           @NonNull Response<DailyExercises> response) {
+                        mStatusTextArea.append("\nData sent. Response received\n");
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<DailyExercises> call,
+                                          @NonNull Throwable t) {
+                        mStatusTextArea.append("\nResponse received: error\n");
+                        mStatusTextArea.append("\n");
+                        mStatusTextArea.append(t.toString());
+                        mStatusTextArea.append("\n");
+                        Log.d(TAG, "Response received : FAIL");
+                    }
+                });
+    }
+
 
     private void sendNutritionDataToHive(NutritionDto dto) {
         NetworkService.getInstance()
