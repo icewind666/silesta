@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         pmsKeySet.add(new PermissionKey(HealthConstants.WaterIntake.HEALTH_DATA_TYPE, PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.AmbientTemperature.HEALTH_DATA_TYPE, PermissionType.READ));
         pmsKeySet.add(new PermissionKey(HealthConstants.SleepStage.HEALTH_DATA_TYPE, PermissionType.READ));
+        pmsKeySet.add(new PermissionKey(HealthConstants.Sleep.HEALTH_DATA_TYPE, PermissionType.READ));
         return pmsKeySet;
     }
 
@@ -217,9 +218,7 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.MILLISECOND, 0);
         mDayStartTime = calendar.getTimeInMillis();
 
-        mSendBtn.setOnClickListener(view -> {
-            gatherDataFromDevice();
-        });
+        mSendBtn.setOnClickListener(view -> gatherDataFromDevice());
     }
 
     private void sendNutrition(List<MealDetails> d) {
@@ -227,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         dto.setMeals(d);
         dto.setDayStart(mDayStartTime);
         dto.status = false;
-       //sendNutritionDataToHive(dto);
+        sendNutritionDataToHive(dto);
     }
 
     /**
@@ -239,18 +238,18 @@ public class MainActivity extends AppCompatActivity {
             mStatusTextArea.append("\nCant connect to health data store\n");
             return;
         }
-        mCompositeDisposable.add(mDataHelper.readDailyIntakeDetails(mDayStartTime)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(MainActivity.this::sendNutrition,
-                        MainActivity.this::showTotalCaloriesFailed)
-        );
-
+//        mCompositeDisposable.add(mDataHelper.readDailyIntakeDetails(mDayStartTime)
+//                .subscribeOn(Schedulers.computation())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(MainActivity.this::sendNutrition,
+//                        MainActivity.this::showTotalCaloriesFailed)
+//        );
+//
         mDataHelper.readStepCount(mDayStartTime,
                 result -> {
                     if (result instanceof StepsDto) {
                         Log.d(TAG, "Steps done");
-                        //MainActivity.this.sendSteps((StepsDto) result);
+                        MainActivity.this.sendSteps((StepsDto) result);
                     }
                 });
 
@@ -259,17 +258,17 @@ public class MainActivity extends AppCompatActivity {
                 result -> {
                     if (result instanceof SleepDto) {
                         Log.d(TAG, "Sleeps done");
-                        //MainActivity.this.sendSleep((SleepDto)result);
+                        MainActivity.this.sendSleep((SleepDto)result);
                     }
                 });
-
-        mDataHelper.readExercises(mDayStartTime,
-                result -> {
-                    if (result instanceof DailyExercises) {
-                        Log.d(TAG, "DailyExercises done");
-                        //MainActivity.this.sendExercises((DailyExercises) result);
-                    }
-                });
+//
+//        mDataHelper.readExercises(mDayStartTime,
+//                result -> {
+//                    if (result instanceof DailyExercises) {
+//                        Log.d(TAG, "DailyExercises done");
+//                        MainActivity.this.sendExercises((DailyExercises) result);
+//                    }
+//                });
     }
 
 
@@ -286,7 +285,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendSteps(StepsDto dto) {
-        //TODO: implement
         NetworkService.getInstance()
                 .getSilestaApi()
                 .sendSteps(dto)
@@ -300,11 +298,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<StepsDto> call,
                                           @NonNull Throwable t) {
-                        mStatusTextArea.append("\nResponse received: error\n");
+                        mStatusTextArea.append("\nResponse received: ERROR\n");
                         mStatusTextArea.append("\n");
                         mStatusTextArea.append(t.toString());
                         mStatusTextArea.append("\n");
-                        Log.d(TAG, "Response received : FAIL");
+                        Log.d(TAG, "Response received for steps: FAIL");
                     }
                 });
 
@@ -324,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<SleepDto> call,
                                           @NonNull Throwable t) {
-                        mStatusTextArea.append("\nResponse received: error\n");
+                        mStatusTextArea.append("\nResponse received for sleep: error\n");
                         mStatusTextArea.append("\n");
                         mStatusTextArea.append(t.toString());
                         mStatusTextArea.append("\n");
@@ -351,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
                         mStatusTextArea.append("\n");
                         mStatusTextArea.append(t.toString());
                         mStatusTextArea.append("\n");
-                        Log.d(TAG, "Response received : FAIL");
+                        Log.d(TAG, "Response received for exercises: FAIL");
                     }
                 });
     }
@@ -371,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<NutritionDto> call,
                                           @NonNull Throwable t) {
-                        mStatusTextArea.append("\nResponse received: error\n");
+                        mStatusTextArea.append("\nResponse received for meals: error\n");
                         mStatusTextArea.append("\n");
                         mStatusTextArea.append(t.toString());
                         mStatusTextArea.append("\n");

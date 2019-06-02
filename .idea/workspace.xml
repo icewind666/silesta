@@ -2,27 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e2491377-618e-4682-a40c-520710906d07" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/app/src/main/java/com/icewind/silestahivesync/DailyIntakeCalories.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/silesta/BankCardDataExtractor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/silesta/extractors/SberbankExtractorConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/silesta/interfaces/ExtractorConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/silesta/interfaces/IExtractor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/.idea/dictionaries/icewind.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/web.config" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphml.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/server.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/new 3.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/silesta/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/silesta/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ui/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/com/icewind/silestahivesync/DeviceDataHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/com/icewind/silestahivesync/DeviceDataHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/com/icewind/silestahivesync/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/com/icewind/silestahivesync/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/com/icewind/silestahivesync/NetworkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/com/icewind/silestahivesync/NetworkService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ui/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/.idea/ui.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ui/.idea/ui.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ui/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/static/js/charts-home.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/static/js/charts-home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/static/js/front.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui/static/js/front.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/ui/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/templates/tables.html" beforeDir="false" afterPath="$PROJECT_DIR$/ui/templates/tables.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/web.config" beforeDir="false" afterPath="$PROJECT_DIR$/ui/web.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/web.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/web.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,11 +30,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/silesta/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+            <state relative-caret-position="-1750">
+              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#15544#15546#0" />
               </folding>
             </state>
           </provider>
@@ -52,12 +42,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/silesta/BankCardDataExtractor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
+            <state relative-caret-position="1998">
               <caret line="97" column="13" selection-start-line="97" selection-start-column="13" selection-end-line="97" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#extractOperationsFromPdf#0;class#BankCardDataExctractor#0" />
-                <element signature="method#loadPdfLines#0;class#BankCardDataExctractor#0" />
               </folding>
             </state>
           </provider>
@@ -108,7 +96,7 @@
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -175,22 +163,18 @@
               <item name="silesta" type="462c0819:PsiDirectoryNode" />
               <item name="util" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="silesta" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/android" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.42647058" />
@@ -280,7 +264,8 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1444563" />
+      <window_info id="Resources Explorer" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1459431" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -462,19 +447,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data.csv">
       <provider editor-type-id="text-editor" />
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state>
-          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
-        </state>
-      </provider>
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" fixedHeaders="true" rowLines="3">
-          <column index="0" width="100" />
-          <column index="1" width="100" />
-          <column index="2" width="100" />
-          <column index="3" width="100" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/silesta/models/BankOperation.java" />
     <entry file="file://$PROJECT_DIR$/src/com/silesta/models/com/silesta/models/tables/BankOperations.java" />
@@ -568,18 +540,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/silesta/BankCardDataExtractor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="97" column="13" selection-start-line="97" selection-start-column="13" selection-end-line="97" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#extractOperationsFromPdf#0;class#BankCardDataExctractor#0" />
-            <element signature="method#loadPdfLines#0;class#BankCardDataExctractor#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/silesta/extractors/SberbankExtractorConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
@@ -617,11 +577,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/silesta/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+        <state relative-caret-position="-1750">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#15544#15546#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/silesta/BankCardDataExtractor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1998">
+          <caret line="97" column="13" selection-start-line="97" selection-start-column="13" selection-end-line="97" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

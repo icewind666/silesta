@@ -115,6 +115,7 @@ class DeviceDataHelper {
                 // start and end should set the handler
                 StepsDto steps = new StepsDto(count, totalDistance, speed/recordCount,
                         startTime, endTime);
+                steps.setDayStart(startTime);
                 // passing result to handler
                 handler.handle(steps);
             } finally {
@@ -133,8 +134,9 @@ class DeviceDataHelper {
                         HealthConstants.StepCount.SPEED
                 })
                 .setFilter(filter)
-                .setLocalTimeRange(HealthConstants.StepCount.START_TIME, HealthConstants.StepCount.TIME_OFFSET,
-                        startTime, endTime)
+                .setTimeAfter(startTime)
+        //setLocalTimeRange(HealthConstants.StepCount.START_TIME, HealthConstants.StepCount.TIME_OFFSET,
+                        //startTime, endTime)
                 .build();
 
         try {
@@ -148,7 +150,7 @@ class DeviceDataHelper {
     void readSleepStages(long startTime, OnSamsungHealthResult handler) {
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
         // Set time range from start time of today to the current time
-        long endTime = startTime + ONE_DAY;
+        //long endTime = startTime + ONE_DAY;
 
         HealthResultHolder.ResultListener<HealthDataResolver.ReadResult> mListener = result -> {
             List<SleepStageDto> stages = new ArrayList<>();
@@ -156,9 +158,10 @@ class DeviceDataHelper {
                 // collecting sleep stages
                 for (HealthData data : result) {
                     SleepStageDto dto = new SleepStageDto();
-                    dto.setStage(data.getString(HealthConstants.SleepStage.STAGE));
-                    dto.setStageStart(data.getLong(HealthConstants.SleepStage.START_TIME));
-                    dto.setStageStart(data.getLong(HealthConstants.SleepStage.END_TIME));
+                    //dto.setStage(data.getString(HealthConstants.SleepStage.STAGE));
+                    dto.setStage("");
+                    dto.setStageStart(data.getLong(HealthConstants.Sleep.START_TIME));
+                    dto.setStageEnd(data.getLong(HealthConstants.Sleep.END_TIME));
                     stages.add(dto);
                 }
 
@@ -174,15 +177,14 @@ class DeviceDataHelper {
         };
 
         HealthDataResolver.ReadRequest request = new HealthDataResolver.ReadRequest.Builder()
-                .setDataType(HealthConstants.SleepStage.HEALTH_DATA_TYPE)
-                .setProperties(new String[] {HealthConstants.SleepStage.STAGE,
-                        HealthConstants.SleepStage.CUSTOM,
-                        HealthConstants.SleepStage.SLEEP_ID,
-                        HealthConstants.SleepStage.PACKAGE_NAME,
-                        HealthConstants.SleepStage.START_TIME
+                .setDataType(HealthConstants.Sleep.HEALTH_DATA_TYPE)
+                .setProperties(new String[] {
+                        HealthConstants.Sleep.CREATE_TIME,
+                        HealthConstants.Sleep.PACKAGE_NAME,
+                        HealthConstants.Sleep.START_TIME,
+                        HealthConstants.Sleep.END_TIME,
                 })
-                .setLocalTimeRange(HealthConstants.SleepStage.START_TIME, HealthConstants.SleepStage.TIME_OFFSET,
-                        startTime, endTime)
+                .setTimeAfter(startTime)
                 .build();
 
         try {
